@@ -1,6 +1,7 @@
 
 
 import lejos.nxt.Button;
+import lejos.robotics.Color;
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
@@ -11,32 +12,91 @@ import lejos.util.Delay;
 
 public class Part1 {
 	private final static int  max_dist = 900;
-	private final static int target_dist = 450;
+	private final static int target_dist = 200;
 	private final static int  min_dist = 1;
-	static DifferentialPilot pilot = new DifferentialPilot(1.13, 5.20, Motor.A, Motor.B, false);
+	private final static DifferentialPilot pilot = new DifferentialPilot(1.13, 5.20, Motor.A, Motor.B, false);
 	private final static double max_speed = pilot.getMaxTravelSpeed();
+	private boolean m_suppressed;
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 			Button.waitForAnyPress();
-			runDistance();
-			//runLightSensor();
+			//runDistance();
+			runLightSensor();
 			
 	}
 
 	private static void runLightSensor() {
 		// TODO Auto-generated method stub
-		LightSensor m_lightSensorR = new LightSensor(SensorPort.S1);
-		LightSensor m_lightSensorL = new LightSensor(SensorPort.S2);
-		m_lightSensorR.setFloodlight(true);
-		m_lightSensorL.setFloodlight(true);
+		LightSensor m_lightSensorR = new LightSensor(SensorPort.S1, true);
+		LightSensor m_lightSensorL = new LightSensor(SensorPort.S2, true);
+		m_lightSensorR.setFloodlight(Color.RED);
+		m_lightSensorL.setFloodlight(Color.RED);
+		//m_lightSensorR.setFloodlight(true);
+		//m_lightSensorL.setFloodlight(true);
 		//pilot.setTravelSpeed(((double) distance / (double) max_dist)*max_speed);
+		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()/3);
+		
 		while(true){
 			System.out.println(m_lightSensorR.getLightValue());
-			
+			pilot.forward();
+			Thread.yield();
+			makeDecision(m_lightSensorL.getLightValue(), m_lightSensorR.getLightValue());
 		}
+		//over brown sensor = 47
+		//on black sensor = 45
+	}
+	
+	private static void makeDecision(int lightValueL, int lightValueR) {
+		// TODO Auto-generated method stub
+		if(lightValueL < 46 && lightValueR < 46)
+		{
+			//pilot.steer(20000);
+			pilot.forward();
+			Delay.msDelay(500);
+			pilot.rotate(90);
+		}
+		else if(lightValueL < 46)
+		{
+			//turn right
+			
+			//Double turnRate = calcTurnRate(lightValueL);
+			pilot.steer(-8000);
+			Thread.yield();
+		}
+		else if(lightValueR < 46)
+		{
+			// turn right
+			
+			//Double turnRate = calcTurnRate(lightValueR);
+			pilot.steer(8000);
+			Thread.yield();
+		}
+		
+	}
+
+	private static Double calcTurnRate(int lightValue) {
+		// TODO Auto-generated method stub
+		
+		return null;
+	}
+
+	public void goForward()
+	{
+		pilot.forward();
+		while(!m_suppressed)
+		{
+			Thread.yield();
+		}
+		pilot.stop();
+		m_suppressed = false;
+	}
+	
+	public void suppress()
+	{
+		
 	}
 	
 	private static void runDistance() {
@@ -50,7 +110,7 @@ public class Part1 {
 		while(true)
 		{
 				distance = m_opticalDistanceSensor.getDistance();
-				System.out.println(distance);
+				//System.out.println(distance);
 				setSpeed(distance);
 				if(distance > target_dist){
 					pilot.forward();
@@ -74,8 +134,9 @@ public class Part1 {
 		} else {
 			pilot.setTravelSpeed(((double) distance * (double) max_dist)*max_speed);
 		}*/
-		double error = (Math.abs(target_dist - distance)/max_dist);
-		pilot.setTravelSpeed(error);
+		double error = (Math.abs((double)target_dist - (double)distance)/(double)max_dist);
+		System.out.println(error * max_speed);
+		pilot.setTravelSpeed(error * max_speed);
 		
 		//System.out.println((distance / max_dist)*pilot.getMaxTravelSpeed());
 	}
