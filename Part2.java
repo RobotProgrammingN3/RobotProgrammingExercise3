@@ -14,8 +14,12 @@ public class Part2 {
 	private boolean m_suppressed;
 	private static int lightThreshold = 43;
 	private static int count = 0;
-	private static int[] decisionList = new int[10];
+	private static int[] decisionList = new int[11];
 	private static boolean notBusy = true;
+	/*Turn values:
+	 * 110 = 90 degrees (don't ask)
+	 * 220 = 180 degrees (our calibration sucks)
+	 * */
 	
 	/**
 	 * @param args
@@ -25,16 +29,17 @@ public class Part2 {
 		// 1 = left
 		// 2 = right
 		// 3 = turn around
-		decisionList[0] = 1;
-		decisionList[1] = 0;
-		decisionList[2] = 1;
-		decisionList[3] = 0;
-		decisionList[4] = 2;
+		decisionList[0] = 0;
+		decisionList[1] = 1;
+		decisionList[2] = 0;
+		decisionList[3] = 2;
+		decisionList[4] = 0;
 		decisionList[5] = 0;
-		decisionList[6] = 1;
-		decisionList[7] = 1;
-		decisionList[8] = 0;
-		decisionList[9] = 3;
+		decisionList[6] = 2;
+		decisionList[7] = 0;
+		decisionList[8] = 2;
+		decisionList[9] = 0;
+		decisionList[10] = 3;
 		             
 		
 			Button.waitForAnyPress();
@@ -105,7 +110,10 @@ public class Part2 {
 		case 2: goRight();
 		case 3: turnAround();
 		}*/
-		
+		if(count >= decisionList.length)
+		{
+			count = 0;
+		}
 		if(decisionList[count] == 1)
 		{
 			goLeft();
@@ -126,7 +134,7 @@ public class Part2 {
 		// TODO Auto-generated method stub
 		notBusy = false;
 		pilot.stop();
-		pilot.rotate(200);
+		pilot.rotate(220);
 		Delay.msDelay(1000);
 		pilot.stop();
 		notBusy = true;
