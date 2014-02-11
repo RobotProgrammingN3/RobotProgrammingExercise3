@@ -17,14 +17,16 @@ public class Part1 {
 	private final static DifferentialPilot pilot = new DifferentialPilot(1.13, 5.20, Motor.A, Motor.B, false);
 	private final static double max_speed = pilot.getMaxTravelSpeed();
 	private boolean m_suppressed;
+	private static int lightThreshold = 43;
+	private static int steerValue = 10000;
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 			Button.waitForAnyPress();
-			//runDistance();
-			runLightSensor();
+			runDistance();
+			//runLightSensor();
 			
 	}
 
@@ -37,7 +39,7 @@ public class Part1 {
 		//m_lightSensorR.setFloodlight(true);
 		//m_lightSensorL.setFloodlight(true);
 		//pilot.setTravelSpeed(((double) distance / (double) max_dist)*max_speed);
-		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()/3);
+		pilot.setTravelSpeed(pilot.getMaxTravelSpeed()/4);
 		
 		while(true){
 			System.out.println(m_lightSensorR.getLightValue());
@@ -51,36 +53,30 @@ public class Part1 {
 	
 	private static void makeDecision(int lightValueL, int lightValueR) {
 		// TODO Auto-generated method stub
-		if(lightValueL < 46 && lightValueR < 46)
+		if(lightValueL < lightThreshold && lightValueR < lightThreshold)
 		{
 			//pilot.steer(20000);
 			pilot.forward();
 			Delay.msDelay(500);
 			pilot.rotate(90);
 		}
-		else if(lightValueL < 46)
+		else if(lightValueL < lightThreshold)
 		{
 			//turn right
 			
 			//Double turnRate = calcTurnRate(lightValueL);
-			pilot.steer(-8000);
+			pilot.steer(-steerValue);
 			Thread.yield();
 		}
-		else if(lightValueR < 46)
+		else if(lightValueR < lightThreshold)
 		{
 			// turn right
 			
 			//Double turnRate = calcTurnRate(lightValueR);
-			pilot.steer(8000);
+			pilot.steer(steerValue);
 			Thread.yield();
 		}
 		
-	}
-
-	private static Double calcTurnRate(int lightValue) {
-		// TODO Auto-generated method stub
-		
-		return null;
 	}
 
 	public void goForward()
@@ -93,12 +89,7 @@ public class Part1 {
 		pilot.stop();
 		m_suppressed = false;
 	}
-	
-	public void suppress()
-	{
-		
-	}
-	
+
 	private static void runDistance() {
 		// TODO Auto-generated method stub
 		
