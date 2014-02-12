@@ -35,7 +35,7 @@ public class Part2 {
 		decisionList[3] = 2;
 		decisionList[4] = 0;
 		decisionList[5] = 0;
-		decisionList[6] = 2;
+		decisionList[6] = 9;
 		decisionList[7] = 0;
 		decisionList[8] = 2;
 		decisionList[9] = 0;
