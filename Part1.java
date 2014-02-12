@@ -28,8 +28,6 @@ public class Part1 {
 
 	private static void runDistance() {
 		// TODO Auto-generated method stub
-		
-		
 		OpticalDistanceSensor m_opticalDistanceSensor = new OpticalDistanceSensor(SensorPort.S4);
 		int distance = 0;
 		//System.out.println(pilot.getMaxTravelSpeed());
@@ -48,8 +46,6 @@ public class Part1 {
 				else {
 					pilot.backward();
 				}
-			
-				
 				//Delay.msDelay(10);
 		}
 	}
